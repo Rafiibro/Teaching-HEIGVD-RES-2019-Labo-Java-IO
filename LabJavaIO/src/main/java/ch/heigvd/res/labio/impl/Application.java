@@ -25,7 +25,7 @@ public class Application implements IApplication {
    * This constant defines where the quotes will be stored. The path is relative
    * to where the Java application is invoked.
    */
-  public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
+  public static String WORKSPACE_DIRECTORY = "./workspace/quotes/";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -129,7 +129,7 @@ public class Application implements IApplication {
    // throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
     String test = new String();
-    test += WORKSPACE_DIRECTORY + "/quotes/";
+    test += WORKSPACE_DIRECTORY;
     for (String s : quote.getTags()) {
       test += s;
       test += "/";
@@ -155,7 +155,7 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
-        
+
         if (file.isFile()) {
           System.out.println(file.getPath());
         }
