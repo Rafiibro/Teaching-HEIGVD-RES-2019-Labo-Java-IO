@@ -41,7 +41,7 @@ public class Utils {
     }
 
     if (line[0] == null && line[1] == null) {
-      line[0] = ""; 
+      line[0] = "";
       line[1] = lines;
     }
 
