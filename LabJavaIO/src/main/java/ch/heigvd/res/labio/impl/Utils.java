@@ -23,6 +23,8 @@ public class Utils {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
     String[] line = new String[2];
+    line[0] = "";
+    line[1] = lines;
 
     for(int i = 0; i < lines.length(); ++i) {
       if((i+1 < lines.length()) && lines.charAt(i) == '\r' && lines.charAt(i+1) == '\n') {
@@ -39,12 +41,6 @@ public class Utils {
         break;
       }
     }
-
-    if (line[0] == null && line[1] == null) {
-      line[0] = "";
-      line[1] = lines;
-    }
-
     return line;
   }
 
