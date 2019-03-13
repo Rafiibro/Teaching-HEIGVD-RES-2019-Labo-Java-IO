@@ -7,10 +7,8 @@ import ch.heigvd.res.labio.interfaces.IFileExplorer;
 import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import ch.heigvd.res.labio.quotes.QuoteClient;
 import ch.heigvd.res.labio.quotes.Quote;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +23,7 @@ public class Application implements IApplication {
    * This constant defines where the quotes will be stored. The path is relative
    * to where the Java application is invoked.
    */
-  public static String WORKSPACE_DIRECTORY = "./workspace/quotes/";
+  public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -126,19 +124,18 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-   // throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-    String test = new String();
-    test += WORKSPACE_DIRECTORY;
+    String path = new String();
+    path += WORKSPACE_DIRECTORY;
     for (String s : quote.getTags()) {
-      test += s;
-      test += "/";
+      path += "/" + s;
     }
-    test += filename;
 
-    File file = new File(test);
+    File file = new File(path);
     file.mkdirs();
-    file.createNewFile();
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "/" + filename), "UTF-8"));
+    writer.write(quote.getQuote());
+    writer.close();
   }
   
   /**
@@ -156,14 +153,10 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
 
-        if (file.isFile()) {
-          System.out.println(file.getPath());
-        }
-        if (file.isDirectory()) {
-          System.out.println(file.getPath());
-          for (File f : file.listFiles()) {
-            visit(f);
-          }
+        try {
+          writer.write(file.getPath() + "\n");
+        } catch (Exception e) {
+          e.printStackTrace();
         }
       }
     });
@@ -174,5 +167,4 @@ public class Application implements IApplication {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
   }
-
 }
