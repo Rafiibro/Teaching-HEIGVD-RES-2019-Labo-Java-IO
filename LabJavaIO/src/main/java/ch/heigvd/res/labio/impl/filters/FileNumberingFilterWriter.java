@@ -19,18 +19,22 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-  private int tab = 0;
-  private int test = 0;
+  private int tab;
+  private boolean premiereLigne;
+  private boolean BSRdetecte;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
+    tab = 0;
+    premiereLigne = true;
+    BSRdetecte = false;
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    if (test == 0) {
+    if (premiereLigne) {
       out.write("" + ++tab + "\t");
-      test = 1;
+      premiereLigne = false;
     }
     for (int i = off; i < (off + len); ++i) {
       out.write(str.charAt(i));
@@ -44,9 +48,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    if (test == 0) {
+    if (premiereLigne) {
       out.write("" + ++tab + "\t");
-      test = 1;
+      premiereLigne = false;
     }
     for (int i = off; i < (off + len); ++i) {
       out.write(cbuf[i]);
@@ -60,14 +64,25 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    if (test == 0) {
-      out.write("" + ++tab + "\t");
-      test = 1;
+    if(tab == 0 && premiereLigne){
+      premiereLigne = false;
+      this.out.write(++tab + "\t");
     }
-    out.write((char)c);
-    if ((char)c == '\n') {
-      out.write("" + ++tab + "\t");
+    if(c == '\n' && !BSRdetecte){
+      this.out.write("\n" + ++tab + "\t");
+    } else if(c == '\r'){
+      if(BSRdetecte){
+        this.out.write("\r" + ++tab + "\t");
+      }
+      BSRdetecte = true;
+    } else if(c == '\n' && BSRdetecte){
+      this.out.write("\r\n" + ++tab + "\t");
+      BSRdetecte = false;
+    }else if(BSRdetecte){
+      this.out.write("\r" + ++tab + "\t" + (char) c);
+      BSRdetecte = false;
+    }else{
+      this.out.write((char) c);
     }
   }
-
 }

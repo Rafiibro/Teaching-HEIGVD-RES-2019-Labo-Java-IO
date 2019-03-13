@@ -1,5 +1,6 @@
 package ch.heigvd.res.labio.impl.transformers;
 
+import ch.heigvd.res.labio.impl.filters.FileNumberingFilterWriter;
 import ch.heigvd.res.labio.interfaces.IFileVisitor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,8 +60,10 @@ public abstract class FileTransformer implements IFileVisitor {
        * characters and write them to the writer.
        */
       int test = 0;
+      int test2 = 0;
+
       while((test = reader.read()) != -1) {
-        writer.write(test);
+        writer.write((char)test);
       }
 
       reader.close();
